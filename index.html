@@ -285,8 +285,6 @@
    <img src="leaf_new.png" class="leaf pink" style="left: 57.9839%; top: 4.55072%; --rotation: 45deg; cursor: grab;">
    <img src="leaf_new.png" class="leaf yellow" style="left: 41.3468%; top: 3.61469%; --rotation: -20deg; cursor: grab;">
 
-    
-    <button class="grow-btn" id="growBtn">Grow Leaf</button>
   </div>
 
   <script>
@@ -428,39 +426,16 @@
           }
         }
         lastStorageCount = grownLeaves.length;
-        
-        // Update button state
-        if (visibleCount >= leaves.length) {
-          growBtn.disabled = true;
-          growBtn.textContent = "Tree is Full!";
-          growBtn.style.background = "#4caf50";
-        }
       }
     }
     
     // Initialize the system
-    const growBtn = document.getElementById('growBtn');
-    
     // Reset all leaves to hidden state
     leaves.forEach(leaf => leaf.classList.remove('show'));
     visibleCount = 0;
     
     // Restore leaves from local storage on page load
     restoreLeavesFromStorage();
-    
-    // Manual grow button functionality
-    growBtn.addEventListener('click', () => {
-      if (visibleCount < leaves.length) {
-        growLeaf(visibleCount);
-        visibleCount++;
-
-        if (visibleCount === leaves.length) {
-          growBtn.disabled = true;
-          growBtn.textContent = "Tree is Full!";
-          growBtn.style.background = "#4caf50";
-        }
-      }
-    });
     
     // Check for new leaves in local storage every 2 seconds
     setInterval(checkForNewLeaves, 2000);
@@ -471,9 +446,6 @@
       leaves.forEach(leaf => leaf.classList.remove('show'));
       visibleCount = 0;
       lastStorageCount = 0;
-      growBtn.disabled = false;
-      growBtn.textContent = "Grow Leaf";
-      growBtn.style.background = "#388e3c";
       console.log('All grown leaves cleared from local storage');
     };
   </script>
