@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You - Tree Leaves</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 60px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      max-width: 600px;
+      margin: 20px;
+      animation: slideIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .leaf-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .message {
+      color: #34495e;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      margin-bottom: 40px;
+    }
+
+    .success-indicator {
+      background: #27ae60;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      display: inline-block;
+      font-weight: 600;
+      margin-bottom: 30px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .back-button {
+      background: #3498db;
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    }
+
+    .back-button:hover {
+      background: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    }
+
+    .leaf-counter {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(46, 204, 113, 0.1);
+      border-radius: 15px;
+      border: 2px solid rgba(46, 204, 113, 0.3);
+    }
+
+    .counter-text {
+      color: #27ae60;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .sparkles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #f39c12;
+      border-radius: 50%;
+      animation: sparkle 2s linear infinite;
+    }
+
+    @keyframes sparkle {
+      0% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 40px 20px;
+        margin: 10px;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" id="sparkles"></div>
+  
+  <div class="container">
+    <div class="leaf-icon">🍃</div>
+    
+    <h1>Thank You!</h1>
+    
+    <p class="subtitle">Your appreciation has been received</p>
+    
+    <div class="success-indicator">
+      ✓ New leaf added to your tree!
+    </div>
+    
+    <p class="message">
+      Thank you for your kind gesture! A beautiful new leaf has been added to your tree. 
+      You can go back to see it grow automatically on your tree.
+    </p>
+    
+    <div class="leaf-counter">
+      <p class="counter-text" id="leafCounter">
+        Total leaves grown: <span id="leafCount">0</span>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Leaf tracking functionality
+    const STORAGE_KEY = 'grownLeaves';
+    
+    // Function to get grown leaves from local storage
+    function getGrownLeaves() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    }
+    
+    // Function to save grown leaves to local storage
+    function saveGrownLeaves(grownLeaves) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(grownLeaves));
+    }
+    
+    // Function to add a new grown leaf to local storage
+    function addNewLeaf() {
+      const grownLeaves = getGrownLeaves();
+      
+      // Find the next available leaf index
+      const usedIndices = grownLeaves.map(leaf => leaf.index);
+      let nextIndex = 0;
+      while (usedIndices.includes(nextIndex)) {
+        nextIndex++;
+      }
+      
+      // Create new leaf data
+      const leafData = {
+        index: nextIndex,
+        timestamp: new Date().toISOString(),
+        source: 'thank-you-page',
+        position: {
+          left: `${20 + (nextIndex * 2)}%`, // Spread leaves across the tree
+          top: `${30 + (nextIndex * 1.5)}%`,
+          rotation: `${nextIndex * 45}deg`
+        }
+      };
+      
+      grownLeaves.push(leafData);
+      saveGrownLeaves(grownLeaves);
+      
+      console.log(`New leaf added from thank-you page:`, leafData);
+      return grownLeaves.length;
+    }
+    
+    // Function to create sparkle effects
+    function createSparkles() {
+      const sparklesContainer = document.getElementById('sparkles');
+      const sparkleCount = 20;
+      
+      for (let i = 0; i < sparkleCount; i++) {
+        setTimeout(() => {
+          const sparkle = document.createElement('div');
+          sparkle.className = 'sparkle';
+          sparkle.style.left = Math.random() * 100 + '%';
+          sparkle.style.top = Math.random() * 100 + '%';
+          sparkle.style.animationDelay = Math.random() * 2 + 's';
+          sparklesContainer.appendChild(sparkle);
+          
+          // Remove sparkle after animation
+          setTimeout(() => {
+            if (sparkle.parentNode) {
+              sparkle.parentNode.removeChild(sparkle);
+            }
+          }, 2000);
+        }, i * 100);
+      }
+    }
+    
+    // Function to update leaf counter
+    function updateLeafCounter() {
+      const grownLeaves = getGrownLeaves();
+      const leafCountElement = document.getElementById('leafCount');
+      leafCountElement.textContent = grownLeaves.length;
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add a new leaf to local storage
+      const totalLeaves = addNewLeaf();
+      
+      // Update the counter
+      updateLeafCounter();
+      
+      // Create sparkle effects
+      createSparkles();
+      
+      // Show success message
+      console.log(`Thank you page visited! Total leaves now: ${totalLeaves}`);
+    });
+    
+    // Add some interactive sparkles on click
+    document.addEventListener('click', function(e) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = e.clientX + 'px';
+      sparkle.style.top = e.clientY + 'px';
+      sparkle.style.position = 'fixed';
+      sparkle.style.pointerEvents = 'none';
+      sparkle.style.zIndex = '1000';
+      document.body.appendChild(sparkle);
+      
+      setTimeout(() => {
+        if (sparkle.parentNode) {
+          sparkle.parentNode.removeChild(sparkle);
+        }
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

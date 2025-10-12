@@ -1,0 +1,559 @@
+<html lang="en"><head><meta name="emotion-insertion-point" content="">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Tree Editor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* 🌄 Background covers entire page */
+    body {
+      background: url('background1.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* 🌳 Tree container with 16:9 (20:11.25) aspect ratio */
+    .background {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80vw; /* controls tree width on screen */
+      aspect-ratio: 16 / 9;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+    }
+
+    /* 🌲 Tree image (maintains full width of container) */
+    .tree-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 1;
+    }
+
+    /* 🌿 Leaf styles */
+    .leaf {
+      position: absolute;
+      width: clamp(40px, 4vw, 70px);
+      opacity: 0;
+      transform: scale(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      z-index: 2;
+    }
+
+    .leaf.show {
+      opacity: 1;
+      transform: scale(1) rotate(var(--rotation));
+    }
+
+    /* 🌱 Button styling */
+    .grow-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 40px;
+      background: #388e3c;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .grow-btn:hover {
+      background: #2e7d32;
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .background {
+        width: 95vw;
+      }
+    }
+  </style>
+<style>@keyframes loading {
+    0% {
+        transform: rotate(0)
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar {
+    height: 6px;
+    width: 6px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb {
+    background: #dfdfdf;
+    border-radius: 4px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb:hover {
+    background: #d4d4d4
+}</style><style>.translated-content .ytCoreImageHost {
+    visibility: visible;
+}</style><style>@keyframes loading {
+    0% {
+        transform: rotate(0)
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar {
+    height: 6px;
+    width: 6px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb {
+    background: #dfdfdf;
+    border-radius: 4px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb:hover {
+    background: #d4d4d4
+}</style><style>.translated-content .ytCoreImageHost {
+    visibility: visible;
+}</style><style>@keyframes loading {
+    0% {
+        transform: rotate(0)
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar {
+    height: 6px;
+    width: 6px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb {
+    background: #dfdfdf;
+    border-radius: 4px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb:hover {
+    background: #d4d4d4
+}</style><style>.translated-content .ytCoreImageHost {
+    visibility: visible;
+}</style><style>@keyframes loading {
+    0% {
+        transform: rotate(0)
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar {
+    height: 6px;
+    width: 6px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb {
+    background: #dfdfdf;
+    border-radius: 4px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb:hover {
+    background: #d4d4d4
+}</style><style>.translated-content .ytCoreImageHost {
+    visibility: visible;
+}</style><style>@keyframes loading {
+    0% {
+        transform: rotate(0)
+    }
+
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar {
+    height: 6px;
+    width: 6px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-track {
+    background: transparent
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb {
+    background: #dfdfdf;
+    border-radius: 4px
+}
+
+.ag-textarea .MuiInputBase-input::-webkit-scrollbar-thumb:hover {
+    background: #d4d4d4
+}</style><style>.translated-content .ytCoreImageHost {
+    visibility: visible;
+}</style></head>
+<body>
+
+  <div class="background" id="tree">
+
+    <img src="tree1.png" alt="Tree" class="tree-img">
+   <!-- 🌿 Manually positioned leaves -->
+   <img src="leaf_new.png" class="leaf green" style="left: 20.1242%; top: 40.8507%; --rotation: 295deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf brown" style="left: 43.2348%; top: 24.2083%; --rotation: -5deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf" style="left: 61.6111%; top: 29.3604%; --rotation: 450deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf" style="left: 22.864%; top: 34.5756%; --rotation: -30deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf red" style="left: 65.2449%; top: 57.6453%; --rotation: 120deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf" style="left: 50.9341%; top: 21.8175%; --rotation: 410deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf" style="left: 36.7138%; top: 41.4791%; --rotation: -355deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf brown" style="left: 27.6631%; top: 59.3218%; --rotation: -120deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf blue" style="left: 24.3314%; top: 53.6287%; --rotation: -80deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf red" style="left: 28.1685%; top: 48.0029%; --rotation: -55deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf" style="left: 31.835%; top: 37.4168%; --rotation: 340deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 21.6099%; top: 25.5969%; --rotation: 325deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf red" style="left: 26.218%; top: 28.0011%; --rotation: -5deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 23.6049%; top: 15.1716%; --rotation: -45deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf brown" style="left: 26.8382%; top: 10.3042%; --rotation: 0deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 38.0962%; top: 32.0763%; --rotation: -375deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 31.4556%; top: 8.72794%; --rotation: -10deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 73.631%; top: 32.3778%; --rotation: 45deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 63.8958%; top: 41.8601%; --rotation: -295deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 55.5408%; top: 26.5446%; --rotation: 35deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 63.8014%; top: 7.63206%; --rotation: 35deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 44.9763%; top: 0.493824%; --rotation: -30deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 52.7128%; top: 1.88724%; --rotation: -305deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 58.1056%; top: 37.3934%; --rotation: -300deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 55.9779%; top: 14.0105%; --rotation: -680deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 44.2154%; top: 33.3032%; --rotation: -15deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 32.3987%; top: 18.2655%; --rotation: -400deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 41.7813%; top: 12.7017%; --rotation: -335deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 36.6922%; top: 4.76717%; --rotation: -375deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 60.4829%; top: 53.6492%; --rotation: 125deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 71.3336%; top: 46.9947%; --rotation: 115deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 69.8367%; top: 39.2149%; --rotation: 70deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 70.2545%; top: 15.9664%; --rotation: 85deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 71.1469%; top: 24.5548%; --rotation: 60deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 62.2921%; top: 19.6216%; --rotation: 65deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 52.5866%; top: 37.1037%; --rotation: 45deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 47.4917%; top: 41.5285%; --rotation: 55deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 50.2095%; top: 11.4203%; --rotation: 40deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 33.898%; top: 51.098%; --rotation: 265deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 55.5892%; top: 47.4221%; --rotation: 75deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 49.1138%; top: 31.4489%; --rotation: 50deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 67.7211%; top: 52.2191%; --rotation: 125deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 67.1542%; top: 33.2604%; --rotation: 70deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 42.0645%; top: 44.2337%; --rotation: -20deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 46.0725%; top: 17.6127%; --rotation: 5deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 37.2157%; top: 16.3631%; --rotation: 375deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf pink" style="left: 57.9839%; top: 4.55072%; --rotation: 45deg; cursor: grab;">
+   <img src="leaf_new.png" class="leaf yellow" style="left: 41.3468%; top: 3.61469%; --rotation: -20deg; cursor: grab;">
+
+    
+    <button class="grow-btn" id="growBtn">Grow Leaf</button>
+  </div>
+
+  <script>
+    const leaves = document.querySelectorAll('.leaf');
+    let selectedLeaf = null;
+    let offsetX, offsetY;
+    let visibleCount = 0;
+
+    // --- Dragging ---
+    leaves.forEach(leaf => {
+      leaf.addEventListener('mousedown', e => {
+        selectedLeaf = leaf;
+        const treeContainer = document.getElementById('tree');
+        const containerRect = treeContainer.getBoundingClientRect();
+        const leafRect = leaf.getBoundingClientRect();
+        
+        // Calculate offset in percentage
+        offsetX = (e.clientX - leafRect.left) / containerRect.width * 100;
+        offsetY = (e.clientY - leafRect.top) / containerRect.height * 100;
+        leaf.style.cursor = 'grabbing';
+      });
+
+      document.addEventListener('mousemove', e => {
+        if (!selectedLeaf) return;
+        const treeContainer = document.getElementById('tree');
+        const containerRect = treeContainer.getBoundingClientRect();
+        
+        // Calculate new position in percentage
+        const newLeftPercent = ((e.clientX - containerRect.left) / containerRect.width * 100) - offsetX;
+        const newTopPercent = ((e.clientY - containerRect.top) / containerRect.height * 100) - offsetY;
+        
+        selectedLeaf.style.left = newLeftPercent + '%';
+        selectedLeaf.style.top = newTopPercent + '%';
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (selectedLeaf) selectedLeaf.style.cursor = 'grab';
+        selectedLeaf = null;
+      });
+
+      // --- Rotation with Mouse Wheel ---
+      leaf.addEventListener('wheel', e => {
+        e.preventDefault();
+        const currentRotation = parseFloat(getComputedStyle(leaf).getPropertyValue('--rotation')) || 0;
+        const newRotation = currentRotation + (e.deltaY > 0 ? 5 : -5);
+        leaf.style.setProperty('--rotation', newRotation + 'deg');
+      });
+    });
+
+    // --- Save to file (Ctrl+S) ---
+    document.addEventListener('keydown', async e => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        const html = document.documentElement.outerHTML;
+        try {
+            const response = await fetch("http://localhost:3000/save-leaves", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ html })
+            });
+          if (response.ok) {
+            alert('✅ Saved successfully!');
+          } else {
+            alert('❌ Failed to save.');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('⚠️ Error while saving.');
+        }
+      }
+    });
+
+    // Leaf tracking and local storage functionality
+    const STORAGE_KEY = 'grownLeaves';
+    let lastStorageCount = 0;
+    
+    // Function to get grown leaves from local storage
+    function getGrownLeaves() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    }
+    
+    // Function to save grown leaves to local storage
+    function saveGrownLeaves(grownLeaves) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(grownLeaves));
+    }
+    
+    // Function to add a new grown leaf to local storage
+    function addGrownLeaf(leafIndex) {
+      const grownLeaves = getGrownLeaves();
+      const leafData = {
+        index: leafIndex,
+        timestamp: new Date().toISOString(),
+        position: {
+          left: leaves[leafIndex].style.left,
+          top: leaves[leafIndex].style.top,
+          rotation: leaves[leafIndex].style.getPropertyValue('--rotation')
+        }
+      };
+      grownLeaves.push(leafData);
+      saveGrownLeaves(grownLeaves);
+      console.log(`Leaf ${leafIndex} added to local storage:`, leafData);
+    }
+    
+    // Function to grow a leaf and track it
+    function growLeaf(leafIndex) {
+      if (leafIndex < leaves.length && !leaves[leafIndex].classList.contains('show')) {
+        leaves[leafIndex].classList.add('show');
+        addGrownLeaf(leafIndex);
+        return true;
+      }
+      return false;
+    }
+    
+    // Function to restore leaves from local storage
+    function restoreLeavesFromStorage() {
+      const grownLeaves = getGrownLeaves();
+      grownLeaves.forEach(leafData => {
+        if (leafData.index < leaves.length) {
+          leaves[leafData.index].classList.add('show');
+        }
+      });
+      visibleCount = grownLeaves.length;
+      lastStorageCount = grownLeaves.length;
+      console.log(`Restored ${grownLeaves.length} leaves from local storage`);
+    }
+    
+    // Function to check for new leaves in local storage
+    function checkForNewLeaves() {
+      const grownLeaves = getGrownLeaves();
+      if (grownLeaves.length > lastStorageCount) {
+        // New leaves found, grow them
+        for (let i = lastStorageCount; i < grownLeaves.length; i++) {
+          const leafData = grownLeaves[i];
+          if (leafData.index < leaves.length) {
+            leaves[leafData.index].classList.add('show');
+            visibleCount++;
+            console.log(`Auto-grew leaf ${leafData.index} from local storage`);
+          }
+        }
+        lastStorageCount = grownLeaves.length;
+        
+        // Update button state
+        if (visibleCount >= leaves.length) {
+          growBtn.disabled = true;
+          growBtn.textContent = "Tree is Full!";
+          growBtn.style.background = "#4caf50";
+        }
+      }
+    }
+    
+    // Initialize the system
+    const growBtn = document.getElementById('growBtn');
+    
+    // Reset all leaves to hidden state
+    leaves.forEach(leaf => leaf.classList.remove('show'));
+    visibleCount = 0;
+    
+    // Restore leaves from local storage on page load
+    restoreLeavesFromStorage();
+    
+    // Manual grow button functionality
+    growBtn.addEventListener('click', () => {
+      if (visibleCount < leaves.length) {
+        growLeaf(visibleCount);
+        visibleCount++;
+
+        if (visibleCount === leaves.length) {
+          growBtn.disabled = true;
+          growBtn.textContent = "Tree is Full!";
+          growBtn.style.background = "#4caf50";
+        }
+      }
+    });
+    
+    // Check for new leaves in local storage every 2 seconds
+    setInterval(checkForNewLeaves, 2000);
+    
+    // Optional: Add a function to clear all grown leaves (for testing)
+    window.clearGrownLeaves = function() {
+      localStorage.removeItem(STORAGE_KEY);
+      leaves.forEach(leaf => leaf.classList.remove('show'));
+      visibleCount = 0;
+      lastStorageCount = 0;
+      growBtn.disabled = false;
+      growBtn.textContent = "Grow Leaf";
+      growBtn.style.background = "#388e3c";
+      console.log('All grown leaves cleared from local storage');
+    };
+  </script>
+
+
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div class="host-lopnbnfpjmgpbppclhclehhgafnifija" style="position: relative; z-index: 2147483647;"></div><div id="quick-start-container"></div><!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<div class="host-lopnbnfpjmgpbppclhclehhgafnifija" style="position: relative; z-index: 2147483647;"></div><div class="host-lopnbnfpjmgpbppclhclehhgafnifija" style="position: relative; z-index: 2147483647;"></div><div class="host-lopnbnfpjmgpbppclhclehhgafnifija" style="position: relative; z-index: 2147483647;"></div><div class="host-lopnbnfpjmgpbppclhclehhgafnifija" style="position: relative; z-index: 2147483647;"></div></body></html>
