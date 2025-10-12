@@ -30,7 +30,7 @@ app.use(helmet({
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-domain.vercel.app'] // Replace with your actual domain
+    ? ['https://qr-sscan-tree-leaves.vercel.app'] // Your actual Vercel domain
     : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   credentials: true
 }));

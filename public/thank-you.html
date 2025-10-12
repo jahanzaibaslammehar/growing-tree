@@ -218,11 +218,19 @@
     // Function to get grown leaves from server
     async function getGrownLeaves() {
       try {
+        console.log('Fetching leaves from server...');
         const response = await fetch('/api/leaves');
+        console.log('API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('API response data:', data);
         return data.success ? data.leaves : [];
       } catch (error) {
-        console.error('Error fetching leaves from server:', error);
+        console.error('❌ Error fetching leaves from server:', error);
         return [];
       }
     }
@@ -250,18 +258,22 @@
           }
         };
         
+        console.log('Sending leaf data to server:', leafData);
         const response = await fetch('/api/leaves', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(leafData)
         });
         
+        console.log('Server response status:', response.status);
         const result = await response.json();
+        console.log('Server response data:', result);
+        
         if (result.success) {
-          console.log(`New leaf added from thank-you page:`, result.leaf);
+          console.log(`✅ New leaf added from thank-you page:`, result.leaf);
           return result.totalLeaves;
         } else {
-          console.error('Failed to add leaf to server:', result.error);
+          console.error('❌ Failed to add leaf to server:', result.error);
           return grownLeaves.length;
         }
       } catch (error) {

@@ -10,34 +10,57 @@ const __dirname = path.dirname(__filename);
 // Server-side storage for leaves
 const LEAVES_FILE = path.join(__dirname, '..', 'data', 'leaves-data.json');
 
-// Ensure data directory exists
-const dataDir = path.dirname(LEAVES_FILE);
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
+// In-memory storage for Vercel (serverless functions)
+let inMemoryLeaves = [];
 
-// Function to read leaves from file
-function readLeaves() {
-  try {
-    if (fs.existsSync(LEAVES_FILE)) {
-      const data = fs.readFileSync(LEAVES_FILE, 'utf8');
-      return JSON.parse(data);
-    }
-    return [];
-  } catch (error) {
-    console.error('Error reading leaves file:', error);
-    return [];
+// Check if we're running on Vercel
+const isVercel = process.env.VERCEL === '1';
+
+// Ensure data directory exists (only for local development)
+if (!isVercel) {
+  const dataDir = path.dirname(LEAVES_FILE);
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
   }
 }
 
-// Function to save leaves to file
+// Function to read leaves
+function readLeaves() {
+  if (isVercel) {
+    // Use in-memory storage on Vercel
+    return inMemoryLeaves;
+  } else {
+    // Use file storage for local development
+    try {
+      if (fs.existsSync(LEAVES_FILE)) {
+        const data = fs.readFileSync(LEAVES_FILE, 'utf8');
+        return JSON.parse(data);
+      }
+      return [];
+    } catch (error) {
+      console.error('Error reading leaves file:', error);
+      return [];
+    }
+  }
+}
+
+// Function to save leaves
 function saveLeaves(leaves) {
-  try {
-    fs.writeFileSync(LEAVES_FILE, JSON.stringify(leaves, null, 2));
+  if (isVercel) {
+    // Use in-memory storage on Vercel
+    inMemoryLeaves = [...leaves];
+    console.log(`✅ Saved ${leaves.length} leaves to memory (Vercel)`);
     return true;
-  } catch (error) {
-    console.error('Error saving leaves file:', error);
-    return false;
+  } else {
+    // Use file storage for local development
+    try {
+      fs.writeFileSync(LEAVES_FILE, JSON.stringify(leaves, null, 2));
+      console.log(`✅ Saved ${leaves.length} leaves to file (local)`);
+      return true;
+    } catch (error) {
+      console.error('Error saving leaves file:', error);
+      return false;
+    }
   }
 }
 
