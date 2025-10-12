@@ -289,6 +289,7 @@
 
   <script>
     const leaves = document.querySelectorAll('.leaf');
+    console.log('Found', leaves.length, 'leaves in DOM');
     let selectedLeaf = null;
     let offsetX, offsetY;
     let visibleCount = 0;
@@ -363,11 +364,19 @@
     // Function to get grown leaves from server
     async function getGrownLeaves() {
       try {
+        console.log('Making API call to /api/leaves...');
         const response = await fetch('/api/leaves');
+        console.log('API response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log('API response data:', data);
         return data.success ? data.leaves : [];
       } catch (error) {
-        console.error('Error fetching leaves from server:', error);
+        console.error('❌ Error fetching leaves from server:', error);
         return [];
       }
     }
@@ -418,17 +427,23 @@
     // Function to restore leaves from server
     async function restoreLeavesFromServer() {
       try {
+        console.log('Fetching leaves from server...');
         const grownLeaves = await getGrownLeaves();
+        console.log('Received leaves from server:', grownLeaves);
+        
         grownLeaves.forEach(leafData => {
           if (leafData.index < leaves.length) {
+            console.log(`Restoring leaf ${leafData.index}`);
             leaves[leafData.index].classList.add('show');
+          } else {
+            console.warn(`Leaf index ${leafData.index} is out of range (max: ${leaves.length - 1})`);
           }
         });
         visibleCount = grownLeaves.length;
         lastServerCount = grownLeaves.length;
-        console.log(`Restored ${grownLeaves.length} leaves from server`);
+        console.log(`✅ Restored ${grownLeaves.length} leaves from server`);
       } catch (error) {
-        console.error('Error restoring leaves from server:', error);
+        console.error('❌ Error restoring leaves from server:', error);
       }
     }
     
@@ -454,12 +469,18 @@
     }
     
     // Initialize the system
-    // Reset all leaves to hidden state
-    leaves.forEach(leaf => leaf.classList.remove('show'));
-    visibleCount = 0;
+    async function initializeApp() {
+      // Reset all leaves to hidden state
+      leaves.forEach(leaf => leaf.classList.remove('show'));
+      visibleCount = 0;
+      
+      // Restore leaves from server on page load
+      await restoreLeavesFromServer();
+      console.log('App initialized with', visibleCount, 'leaves');
+    }
     
-    // Restore leaves from server on page load
-    restoreLeavesFromServer();
+    // Start the app
+    initializeApp();
     
     // Check for new leaves on server every 2 seconds
     setInterval(checkForNewLeaves, 2000);

@@ -86,7 +86,7 @@ app.use((err, req, res, next) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '0.0.0.0';
+const HOST = process.env.HOST || 'localhost';
 
 app.listen(PORT, HOST, () => {
   console.log(`🌳 Tree Leaves App running on http://${HOST}:${PORT}`);
