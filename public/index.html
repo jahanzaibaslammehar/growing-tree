@@ -1,6 +1,9 @@
 <html lang="en"><head><meta name="emotion-insertion-point" content="">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Interactive Tree Editor</title>
   <style>
     * {
@@ -18,7 +21,7 @@
 
     /* 🌄 Background covers entire page */
     body {
-      background: url('background1.jpg') no-repeat center center fixed;
+      background: url('background.svg') no-repeat center center fixed;
       background-size: cover;
     }
 
@@ -42,6 +45,21 @@
       height: 100%;
       object-fit: contain;
       z-index: 1;
+      transform: translateY(10%);
+    }
+
+    /* 🔵 Shape below tree */
+    .shape-below-tree {
+      position: absolute;
+      top: 103%;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: auto;
+      max-height: 20%;
+      object-fit: contain;
+      z-index: 0;
     }
 
     /* 🌿 Leaf styles */
@@ -57,6 +75,110 @@
     .leaf.show {
       opacity: 1;
       transform: scale(1) rotate(var(--rotation));
+    }
+
+    /* 📱 QR Code Placeholder styles */
+    .qr-placeholder-container {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      width: 200px;
+      height: auto;
+    }
+
+    .qr-placeholder {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .qr-code-overlay {
+      position: absolute;
+      top: 37%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-code {
+      width: 100px;
+      height: 100px;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* Responsive QR code placeholder */
+    @media (max-width: 768px) {
+      .qr-placeholder-container {
+        top: 15px;
+        left: 15px;
+        width: 150px;
+      }
+      
+      .qr-code-overlay {
+        width: 90px;
+        height: 90px;
+      }
+      
+      .qr-code {
+        width: 75px;
+        height: 75px;
+      }
+    }
+
+    /* 🏢 UNICEF Logo styles */
+    .unicef-logo-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      width: 168px;
+      height: auto;
+    }
+
+    .unicef-logo {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Responsive UNICEF logo */
+    @media (max-width: 768px) {
+      .unicef-logo-container {
+        top: 15px;
+        right: 15px;
+        width: 140px;
+      }
+    }
+
+    /* 🌱 Seeds of Change styles */
+    .seeds-of-change-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: 300px;
+      height: auto;
+    }
+
+    .seeds-of-change {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Responsive Seeds of Change */
+    @media (max-width: 768px) {
+      .seeds-of-change-container {
+        bottom: 15px;
+        width: 250px;
+      }
     }
 
     /* 🌱 Button styling */
@@ -232,9 +354,31 @@
 }</style></head>
 <body>
 
+  <!-- QR Code Placeholder in top left corner -->
+  <div class="qr-placeholder-container">
+    <img src="qr_code_placeholder.svg" alt="QR Code Placeholder" class="qr-placeholder">
+    <div class="qr-code-overlay">
+      <img src="qr-code.png" alt="QR Code" class="qr-code">
+    </div>
+  </div>
+
+  <!-- UNICEF Logo in top right corner -->
+  <div class="unicef-logo-container">
+    <img src="unicef_logo.svg" alt="UNICEF Logo" class="unicef-logo">
+  </div>
+
+  <!-- Seeds of Change in center bottom -->
+  <div class="seeds-of-change-container">
+    <img src="seeds_of_change.svg" alt="Seeds of Change" class="seeds-of-change">
+  </div>
+
   <div class="background" id="tree">
 
-    <img src="tree1.png" alt="Tree" class="tree-img">
+    <img src="tree.svg" alt="Tree" class="tree-img">
+    
+    <!-- Shape below tree -->
+    <img src="shape_below_tree.svg" alt="Shape below tree" class="shape-below-tree">
+    
    <!-- 🌿 Manually positioned leaves -->
    <img src="leaf_new.png" class="leaf green" style="left: 20.1242%; top: 40.8507%; --rotation: 295deg; cursor: grab;">
    <img src="leaf_new.png" class="leaf brown" style="left: 43.2348%; top: 24.2083%; --rotation: -5deg; cursor: grab;">
@@ -286,6 +430,7 @@
    <img src="leaf_new.png" class="leaf yellow" style="left: 41.3468%; top: 3.61469%; --rotation: -20deg; cursor: grab;">
 
   </div>
+
 
   <script>
     const leaves = document.querySelectorAll('.leaf');
@@ -361,11 +506,20 @@
     // Leaf tracking with server-side storage
     let lastServerCount = 0;
     
-    // Function to get grown leaves from server
+    // Function to get grown leaves from server (server-based only)
     async function getGrownLeaves() {
       try {
         console.log('Making API call to /api/leaves...');
-        const response = await fetch('/api/leaves');
+        // Add cache busting parameter to ensure fresh data
+        const timestamp = Date.now();
+        const response = await fetch(`/api/leaves?t=${timestamp}`, {
+          method: 'GET',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
         console.log('API response status:', response.status);
         
         if (!response.ok) {
@@ -374,9 +528,18 @@
         
         const data = await response.json();
         console.log('API response data:', data);
-        return data.success ? data.leaves : [];
+        
+        if (data.success) {
+          // Server responded successfully, return server data
+          console.log(`Retrieved ${data.leaves.length} leaves from server`);
+          return data.leaves;
+        } else {
+          console.error('Server returned error:', data.error);
+          return [];
+        }
       } catch (error) {
         console.error('❌ Error fetching leaves from server:', error);
+        // No fallback - return empty array if server fails
         return [];
       }
     }

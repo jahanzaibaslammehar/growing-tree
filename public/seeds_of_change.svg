@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 539.16 268.7">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 130.74px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #fff;
+        font-family: NotoSans-ExtraBold, 'Noto Sans';
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        font-size: 119.5px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <text class="cls-2" transform="translate(6.39 102.41)"><tspan x="0" y="0">SEEDS OF</tspan></text>
+    <text class="cls-1" transform="translate(0 217.19)"><tspan x="0" y="0">CHANGE</tspan></text>
+  </g>
+</svg>

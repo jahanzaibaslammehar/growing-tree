@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 388.88 473.64">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #00aeef;
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-size: 34.34px;
+      }
+
+      .cls-4 {
+        font-family: NotoSans-Bold, 'Noto Sans';
+        font-weight: 700;
+      }
+
+      .cls-5 {
+        font-family: NotoSans-Regular, 'NotoSans Regular';
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <path class="cls-3" d="M0,0h388.88v340.44c0,73.51-59.68,133.2-133.2,133.2H0V0h0Z"/>
+    <text class="cls-2" transform="translate(64.68 352.07)"><tspan class="cls-5"><tspan x="0" y="0">Scan to make your</tspan></tspan><tspan class="cls-4" x="-13.72" y="38.05">pledge</tspan><tspan class="cls-5" x="94.37" y="38.05" xml:space="preserve"> and grow a </tspan><tspan class="cls-5"><tspan x="20.34" y="76.11">leaf on the tree.</tspan></tspan></text>
+    <rect class="cls-1" x="55.2" y="48.3" width="258.88" height="258.88"/>
+  </g>
+</svg>

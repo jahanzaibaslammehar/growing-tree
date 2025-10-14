@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Thank You - Tree Leaves</title>
   <style>
     * {
@@ -215,11 +218,20 @@
   <script>
     // Leaf tracking functionality with server-side storage
     
-    // Function to get grown leaves from server
+    // Function to get grown leaves from server with cache busting
     async function getGrownLeaves() {
       try {
         console.log('Fetching leaves from server...');
-        const response = await fetch('/api/leaves');
+        // Add cache busting parameter to ensure fresh data
+        const timestamp = Date.now();
+        const response = await fetch(`/api/leaves?t=${timestamp}`, {
+          method: 'GET',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
         console.log('API response status:', response.status);
         
         if (!response.ok) {
@@ -238,30 +250,21 @@
     // Function to add a new grown leaf to server
     async function addNewLeaf() {
       try {
-        const grownLeaves = await getGrownLeaves();
-        
-        // Find the next available leaf index
-        const usedIndices = grownLeaves.map(leaf => leaf.index);
-        let nextIndex = 0;
-        while (usedIndices.includes(nextIndex)) {
-          nextIndex++;
-        }
-        
-        // Create new leaf data
+        // Let server auto-generate the index to avoid conflicts
         const leafData = {
-          index: nextIndex,
-          source: 'thank-you-page',
-          position: {
-            left: `${20 + (nextIndex * 2)}%`, // Spread leaves across the tree
-            top: `${30 + (nextIndex * 1.5)}%`,
-            rotation: `${nextIndex * 45}deg`
-          }
+          source: 'thank-you-page'
+          // No index provided - server will auto-generate
         };
         
         console.log('Sending leaf data to server:', leafData);
         const response = await fetch('/api/leaves', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          },
           body: JSON.stringify(leafData)
         });
         
@@ -274,7 +277,7 @@
           return result.totalLeaves;
         } else {
           console.error('❌ Failed to add leaf to server:', result.error);
-          return grownLeaves.length;
+          return 0;
         }
       } catch (error) {
         console.error('Error adding leaf to server:', error);
@@ -306,11 +309,16 @@
       }
     }
     
-    // Function to update leaf counter
+    // Function to update leaf counter with fresh data
     async function updateLeafCounter() {
-      const grownLeaves = await getGrownLeaves();
-      const leafCountElement = document.getElementById('leafCount');
-      leafCountElement.textContent = grownLeaves.length;
+      try {
+        const grownLeaves = await getGrownLeaves();
+        const leafCountElement = document.getElementById('leafCount');
+        leafCountElement.textContent = grownLeaves.length;
+        console.log('Leaf counter updated to:', grownLeaves.length);
+      } catch (error) {
+        console.error('Error updating leaf counter:', error);
+      }
     }
     
     // Initialize the page

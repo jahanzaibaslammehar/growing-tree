@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Clear All Leaves - Tree Leaves</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #e74c3c;
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .current-count {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      border-left: 4px solid #3498db;
+    }
+
+    .count-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #3498db;
+    }
+
+    .clear-button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .clear-button:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    .clear-button:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status {
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status.loading {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .links {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+
+    .links a {
+      color: #3498db;
+      text-decoration: none;
+      margin: 0 10px;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+    }
+
+    .links a:hover {
+      background: #f8f9fa;
+    }
+
+    .warning {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ffeaa7;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🍃</div>
+    <h1>Clear All Leaves</h1>
+    <p class="description">
+      This will permanently remove all leaves from the tree. This action cannot be undone.
+    </p>
+    
+    <div class="warning">
+      ⚠️ <strong>Warning:</strong> This will delete all leaves and reset the tree to its original state.
+    </div>
+
+    <div class="current-count">
+      <div>Current leaves on tree:</div>
+      <div class="count-number" id="currentCount">Loading...</div>
+    </div>
+
+    <button class="clear-button" id="clearButton" onclick="clearAllLeaves()">
+      🗑️ Clear All Leaves
+    </button>
+
+    <div id="status"></div>
+
+    <div class="links">
+      <a href="/">🌳 View Tree</a>
+      <a href="/thank-you">🙏 Thank You Page</a>
+      <a href="/api/leaves" target="_blank">📊 API Data</a>
+    </div>
+  </div>
+
+  <script>
+    let currentLeavesCount = 0;
+
+    // Function to get current leaves count
+    async function getCurrentLeavesCount() {
+      try {
+        const timestamp = Date.now();
+        const response = await fetch(`/api/leaves?t=${timestamp}`, {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          currentLeavesCount = data.leaves ? data.leaves.length : 0;
+          document.getElementById('currentCount').textContent = currentLeavesCount;
+          
+          // Disable button if no leaves
+          const clearButton = document.getElementById('clearButton');
+          if (currentLeavesCount === 0) {
+            clearButton.disabled = true;
+            clearButton.textContent = '✅ No Leaves to Clear';
+          }
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error fetching leaves count:', error);
+        document.getElementById('currentCount').textContent = 'Error';
+      }
+    }
+
+    // Function to clear all leaves
+    async function clearAllLeaves() {
+      const clearButton = document.getElementById('clearButton');
+      const statusDiv = document.getElementById('status');
+      
+      // Confirm action
+      if (!confirm(`Are you sure you want to clear all ${currentLeavesCount} leaves? This action cannot be undone.`)) {
+        return;
+      }
+
+      // Show loading state
+      clearButton.disabled = true;
+      clearButton.textContent = '🔄 Clearing...';
+      statusDiv.className = 'status loading';
+      statusDiv.textContent = 'Clearing all leaves...';
+
+      try {
+        const response = await fetch('/api/leaves/clear', {
+          method: 'GET',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          statusDiv.className = 'status success';
+          statusDiv.textContent = `✅ Successfully cleared all leaves! (${result.totalLeaves} leaves remaining)`;
+          
+          // Update count
+          currentLeavesCount = 0;
+          document.getElementById('currentCount').textContent = '0';
+          
+          // Update button
+          clearButton.textContent = '✅ All Leaves Cleared';
+          clearButton.style.background = '#27ae60';
+        } else {
+          throw new Error(result.error || 'Failed to clear leaves');
+        }
+      } catch (error) {
+        console.error('Error clearing leaves:', error);
+        statusDiv.className = 'status error';
+        statusDiv.textContent = `❌ Error: ${error.message}`;
+        
+        // Re-enable button
+        clearButton.disabled = false;
+        clearButton.textContent = '🗑️ Clear All Leaves';
+      }
+    }
+
+    // Load current count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      getCurrentLeavesCount();
+    });
+  </script>
+</body>
+</html>
