@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 628.09 183.95">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #00aeef;
+        font-family: NotoSans-ExtraBold, 'Noto Sans';
+        font-size: 83px;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <rect class="cls-2" x="0" y="0" width="628.09" height="183.95" rx="91.97" ry="91.97"/>
+    <text class="cls-1" transform="translate(38.15 122.32)"><tspan x="0" y="0">COUNT ME IN</tspan></text>
+  </g>
+</svg>

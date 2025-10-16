@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 727.37 200.28">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: NotoSans-Regular, 'NotoSans Regular';
+        font-size: 73.84px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-family: NotoSans-SemiBold, 'Noto Sans';
+        font-size: 103.63px;
+        font-weight: 600;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <text class="cls-1" transform="translate(0 181.83)"><tspan x="0" y="0" xml:space="preserve"> plant hope for every child</tspan></text>
+      <text class="cls-2" transform="translate(113.05 88.81)"><tspan x="0" y="0">I pledge to</tspan></text>
+    </g>
+  </g>
+</svg>

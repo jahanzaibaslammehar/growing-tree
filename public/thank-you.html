@@ -16,23 +16,40 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-image: url('Background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      overflow-x: hidden;
+      position: relative;
     }
 
+    /* UNICEF Logo */
+    .unicef-logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 180px;
+      height: auto;
+      z-index: 10;
+    }
+
+    /* Main Container */
     .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 60px 40px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
-      max-width: 600px;
-      margin: 20px;
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 20px;
       animation: slideIn 0.8s ease-out;
     }
 
@@ -47,10 +64,13 @@
       }
     }
 
-    .leaf-icon {
-      font-size: 80px;
-      margin-bottom: 20px;
+    /* Leaf Image */
+    .leaf-image {
+      width: 240px;
+      height: auto;
+      margin-bottom: 30px;
       animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
     }
 
     @keyframes float {
@@ -58,101 +78,70 @@
         transform: translateY(0px);
       }
       50% {
-        transform: translateY(-20px);
+        transform: translateY(-15px);
       }
     }
 
-    h1 {
-      color: #2c3e50;
-      font-size: 3rem;
-      margin-bottom: 20px;
-      font-weight: 700;
-    }
-
-    .subtitle {
-      color: #7f8c8d;
-      font-size: 1.2rem;
+    /* Pledge Text SVG */
+    .pledge-text {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
       margin-bottom: 30px;
-      line-height: 1.6;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
     }
 
-    .message {
-      color: #34495e;
-      font-size: 1.1rem;
-      line-height: 1.8;
-      margin-bottom: 40px;
-    }
-
-    .success-indicator {
-      background: #27ae60;
-      color: white;
-      padding: 15px 30px;
-      border-radius: 50px;
-      display: inline-block;
-      font-weight: 600;
-      margin-bottom: 30px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-
-    .back-button {
-      background: #3498db;
-      color: white;
-      padding: 15px 40px;
+    /* Count Me In Button */
+    .count-me-in-btn {
+      background: none;
       border: none;
-      border-radius: 50px;
-      font-size: 1.1rem;
-      font-weight: 600;
+      padding: 0;
       cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      width: 100%;
+      max-width: 300px;
+      display: block;
     }
 
-    .back-button:hover {
-      background: #2980b9;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    .count-me-in {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
     }
 
-    .leaf-counter {
-      margin-top: 30px;
-      padding: 20px;
-      background: rgba(46, 204, 113, 0.1);
-      border-radius: 15px;
-      border: 2px solid rgba(46, 204, 113, 0.3);
+    .count-me-in-btn:hover .count-me-in {
+      transform: scale(1.05);
+      filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.4));
     }
 
-    .counter-text {
-      color: #27ae60;
-      font-weight: 600;
-      font-size: 1.1rem;
+    .count-me-in-btn:active .count-me-in {
+      transform: scale(0.95);
     }
 
+    .count-me-in-btn:focus {
+      outline: none;
+    }
+
+    .count-me-in-btn:focus .count-me-in {
+      filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 0 3px rgba(0, 174, 239, 0.5));
+    }
+
+    /* Sparkles Effect */
     .sparkles {
-      position: absolute;
+      position: fixed;
       width: 100%;
       height: 100%;
       pointer-events: none;
       overflow: hidden;
+      z-index: 1;
     }
 
     .sparkle {
       position: absolute;
-      width: 4px;
-      height: 4px;
+      width: 6px;
+      height: 6px;
       background: #f39c12;
       border-radius: 50%;
       animation: sparkle 2s linear infinite;
@@ -173,18 +162,127 @@
       }
     }
 
-    @media (max-width: 768px) {
+    /* Thank You Popup */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup-overlay.show {
+      display: flex;
+    }
+
+    .popup-content {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 300px;
+      width: 90%;
+      animation: popupSlideIn 0.3s ease-out;
+    }
+
+    @keyframes popupSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .popup-icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+    }
+
+    .popup-title {
+      color: #2c3e50;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .popup-message {
+      color: #7f8c8d;
+      font-size: 1rem;
+      margin-bottom: 25px;
+    }
+
+    .popup-close {
+      background: #27ae60;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .popup-close:hover {
+      background: #229954;
+      transform: translateY(-2px);
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 480px) {
+      .unicef-logo {
+        width: 120px;
+        top: 15px;
+        right: 15px;
+      }
+      
       .container {
-        padding: 40px 20px;
-        margin: 10px;
+        padding: 30px 15px;
+        max-width: 350px;
       }
       
-      h1 {
-        font-size: 2.5rem;
+      .leaf-image {
+        width: 200px;
+        margin-bottom: 25px;
       }
       
-      .subtitle {
-        font-size: 1rem;
+      .pledge-text {
+        max-width: 300px;
+        margin-bottom: 25px;
+      }
+      
+      .count-me-in-btn {
+        max-width: 280px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        padding: 20px 10px;
+        max-width: 320px;
+      }
+      
+      .leaf-image {
+        width: 180px;
+        margin-bottom: 20px;
+      }
+      
+      .pledge-text {
+        max-width: 280px;
+        margin-bottom: 20px;
+      }
+      
+      .count-me-in-btn {
+        max-width: 260px;
       }
     }
   </style>
@@ -192,71 +290,76 @@
 <body>
   <div class="sparkles" id="sparkles"></div>
   
+  <!-- UNICEF Logo -->
+  <img src="unicef_logo.svg" alt="UNICEF Logo" class="unicef-logo">
+  
   <div class="container">
-    <div class="leaf-icon">🍃</div>
+    <!-- Leaf Image -->
+    <img src="leaf_new.png" alt="Leaf" class="leaf-image">
     
-    <h1>Thank You!</h1>
+    <!-- Pledge Text PNG -->
+    <img src="pledge_text.png" alt="I pledge to plant hope for every child" class="pledge-text">
     
-    <p class="subtitle">Your appreciation has been received</p>
-    
-    <div class="success-indicator">
-      ✓ New leaf added to your tree!
-    </div>
-    
-    <p class="message">
-      Thank you for your kind gesture! A beautiful new leaf has been added to your tree. 
-      You can go back to see it grow automatically on your tree.
-    </p>
-    
-    <div class="leaf-counter">
-      <p class="counter-text" id="leafCounter">
-        Total leaves grown: <span id="leafCount">0</span>
-      </p>
+    <!-- Count Me In Button -->
+    <button class="count-me-in-btn" onclick="handleCountMeIn()">
+      <img src="count_me_in.svg" alt="Count Me In" class="count-me-in">
+    </button>
+  </div>
+
+  <!-- Thank You Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-content">
+      <div class="popup-icon">🌱</div>
+      <div class="popup-title">Thank You!</div>
+      <div class="popup-message">Your pledge has been recorded!</div>
+      <button class="popup-close" onclick="closePopup()">Close</button>
     </div>
   </div>
 
   <script>
-    // Leaf tracking functionality with server-side storage
-    
-    // Function to get grown leaves from server with cache busting
-    async function getGrownLeaves() {
-      try {
-        console.log('Fetching leaves from server...');
-        // Add cache busting parameter to ensure fresh data
-        const timestamp = Date.now();
-        const response = await fetch(`/api/leaves?t=${timestamp}`, {
-          method: 'GET',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
-        });
-        console.log('API response status:', response.status);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('API response data:', data);
-        return data.success ? data.leaves : [];
-      } catch (error) {
-        console.error('❌ Error fetching leaves from server:', error);
-        return [];
-      }
+    // Function to handle Count Me In button click
+    function handleCountMeIn() {
+      // Add visual feedback
+      const button = document.querySelector('.count-me-in-btn');
+      const image = document.querySelector('.count-me-in');
+      
+      // Animate the button
+      image.style.transform = 'scale(0.95)';
+      
+      setTimeout(() => {
+        image.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          image.style.transform = 'scale(1)';
+        }, 150);
+      }, 150);
+      
+      // Create extra sparkles on click
+      createClickSparkles();
+      
+      // Add a new leaf to the server
+      addNewLeaf();
+      
+      // Show popup
+      showPopup();
+    }
+
+    // Function to show popup
+    function showPopup() {
+      document.getElementById('popupOverlay').classList.add('show');
+    }
+
+    // Function to close popup
+    function closePopup() {
+      document.getElementById('popupOverlay').classList.remove('show');
     }
     
     // Function to add a new grown leaf to server
     async function addNewLeaf() {
       try {
-        // Let server auto-generate the index to avoid conflicts
         const leafData = {
           source: 'thank-you-page'
-          // No index provided - server will auto-generate
         };
         
-        console.log('Sending leaf data to server:', leafData);
         const response = await fetch('/api/leaves', {
           method: 'POST',
           headers: { 
@@ -268,27 +371,22 @@
           body: JSON.stringify(leafData)
         });
         
-        console.log('Server response status:', response.status);
         const result = await response.json();
-        console.log('Server response data:', result);
         
         if (result.success) {
           console.log(`✅ New leaf added from thank-you page:`, result.leaf);
-          return result.totalLeaves;
         } else {
           console.error('❌ Failed to add leaf to server:', result.error);
-          return 0;
         }
       } catch (error) {
         console.error('Error adding leaf to server:', error);
-        return 0;
       }
     }
     
     // Function to create sparkle effects
     function createSparkles() {
       const sparklesContainer = document.getElementById('sparkles');
-      const sparkleCount = 20;
+      const sparkleCount = 15;
       
       for (let i = 0; i < sparkleCount; i++) {
         setTimeout(() => {
@@ -309,34 +407,37 @@
       }
     }
     
-    // Function to update leaf counter with fresh data
-    async function updateLeafCounter() {
-      try {
-        const grownLeaves = await getGrownLeaves();
-        const leafCountElement = document.getElementById('leafCount');
-        leafCountElement.textContent = grownLeaves.length;
-        console.log('Leaf counter updated to:', grownLeaves.length);
-      } catch (error) {
-        console.error('Error updating leaf counter:', error);
+    // Function to create sparkles on click
+    function createClickSparkles() {
+      const sparklesContainer = document.getElementById('sparkles');
+      const sparkleCount = 8;
+      
+      for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = (Math.random() * 80 + 10) + '%';
+        sparkle.style.top = (Math.random() * 80 + 10) + '%';
+        sparkle.style.animationDelay = Math.random() * 0.5 + 's';
+        sparklesContainer.appendChild(sparkle);
+        
+        // Remove sparkle after animation
+        setTimeout(() => {
+          if (sparkle.parentNode) {
+            sparkle.parentNode.removeChild(sparkle);
+          }
+        }, 2000);
       }
     }
     
     // Initialize the page
-    document.addEventListener('DOMContentLoaded', async function() {
-      // Add a new leaf to server
-      const totalLeaves = await addNewLeaf();
-      
-      // Update the counter
-      await updateLeafCounter();
-      
-      // Create sparkle effects
+    document.addEventListener('DOMContentLoaded', function() {
+      // Create initial sparkle effects
       createSparkles();
       
-      // Show success message
-      console.log(`Thank you page visited! Total leaves now: ${totalLeaves}`);
+      console.log('Thank you page loaded with new mobile design!');
     });
     
-    // Add some interactive sparkles on click
+    // Add interactive sparkles on any click
     document.addEventListener('click', function(e) {
       const sparkle = document.createElement('div');
       sparkle.className = 'sparkle';
