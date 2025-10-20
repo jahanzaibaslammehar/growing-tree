@@ -101,6 +101,13 @@
       width: 100%;
       max-width: 300px;
       display: block;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
     }
 
     .count-me-in {
@@ -301,7 +308,7 @@
     <img src="pledge_text.png" alt="I pledge to plant hope for every child" class="pledge-text">
     
     <!-- Count Me In Button -->
-    <button class="count-me-in-btn" onclick="handleCountMeIn()">
+    <button class="count-me-in-btn">
       <img src="count_me_in.svg" alt="Count Me In" class="count-me-in">
     </button>
   </div>
@@ -433,6 +440,33 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Create initial sparkle effects
       createSparkles();
+      
+      // Add click event to overlay to close popup
+      document.getElementById('popupOverlay').addEventListener('click', closePopup);
+      
+      // Add touch event handlers for mobile compatibility
+      const countMeInBtn = document.querySelector('.count-me-in-btn');
+      if (countMeInBtn) {
+        // Add touch events for better mobile support
+        countMeInBtn.addEventListener('touchstart', function(e) {
+          e.preventDefault();
+          // Add visual feedback immediately on touch
+          const image = document.querySelector('.count-me-in');
+          image.style.transform = 'scale(0.95)';
+        });
+        
+        countMeInBtn.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          // Trigger the click handler
+          handleCountMeIn();
+        });
+        
+        // Also keep the regular click event for desktop
+        countMeInBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          handleCountMeIn();
+        });
+      }
       
       console.log('Thank you page loaded with new mobile design!');
     });
